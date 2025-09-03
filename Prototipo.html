@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CiberSeg - Herramientas de Ciberseguridad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 90%;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #004d99;
+            margin-top: 0;
+        }
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 30%; /* Reducido en un 20% (antes 50%) */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .section-box, .login-box, .form-box, .tool-box {
+            background-color: #e9f2f8;
+            border: 1px solid #d4e2ee;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        .login-box input, .form-box input, .form-box select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .button-submit {
+            background-color: #0066cc;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .button-submit:hover {
+            background-color: #0059b3;
+        }
+        .button-logout, .button-back {
+            background-color: #dc3545;
+            margin-top: 10px;
+        }
+        .button-logout:hover, .button-back:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav-menu {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-menu button {
+            background-color: #004d99;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu button:hover {
+            background-color: #003366;
+        }
+        .result-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .low-risk { color: #dc3545; }
+        .medium-risk { color: #ffc107; }
+        .high-risk { color: #28a745; }
+        
+        /* Estilos del nuevo panel de administrador */
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .metric-card, .chart-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .metric-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .chart-container h3 {
+            margin-bottom: 15px;
+        }
+        .chart-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+            overflow: hidden;
+        }
+        .chart-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .user-table th, .user-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .user-table th {
+            background-color: #004d99;
+            color: white;
+        }
+        
+        .email-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        .email-container:hover {
+            background-color: #f0f0f0;
+        }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .email-subject {
+            font-weight: bold;
+            color: #004d99;
+            margin: 0;
+        }
+        .email-body {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        .email-link {
+            color: #0066cc;
+            text-decoration: underline;
+        }
+        .quiz-result-percentage {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        .green-score { color: #28a745; }
+        .red-score { color: #dc3545; }
+        .question-box {
+            background-color: #fff;
+            border: 1px solid #d4e2ee;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        .question-box p {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .question-box label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        /* Estilos para el glosario */
+        .glossary-item {
+            background-color: #fff;
+            border: 1px solid #d4e2ee;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .glossary-item:hover {
+            background-color: #f0f0f0;
+        }
+        .glossary-term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .glossary-term-header h3 {
+            margin: 0;
+            color: #004d99;
+            font-size: 1.2em;
+        }
+        .glossary-term-header .arrow {
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+        .glossary-item.active .arrow {
+            transform: rotate(90deg);
+        }
+        .glossary-definition {
+            display: none;
+            padding-top: 10px;
+            margin-top: 10px;
+            border-top: 1px solid #d4e2ee;
+        }
+        .glossary-item.active .glossary-definition {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="Logo.png" alt="Logo de CiberSeg" class="logo">
+        </div>
+        <header>
+            <h1 id="main-title">Bienvenido a CiberSeg</h1>
+        </header>
+
+        <section id="login-section">
+            <h2>Acceso al Sistema</h2>
+            <div class="login-box">
+                <form id="login-form">
+                    <input type="text" id="username" placeholder="Usuario" required>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <button type="submit" class="button-submit">Iniciar Sesión</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="register-section" class="hidden">
+            <h2>Registro de Usuario</h2>
+            <div class="form-box">
+                <form id="register-form">
+                    <input type="text" id="reg-name" placeholder="Nombre completo" required>
+                    <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+                    <input type="text" id="reg-city" placeholder="Ciudad" required>
+                    <input type="number" id="reg-age" placeholder="Edad" min="1" required>
+                    <select id="reg-country" required>
+                        <option value="">Seleccione su país</option>
+                        <optgroup label="Guatemala">
+                            <option value="Guatemala">Guatemala</option>
+                        </optgroup>
+                        <optgroup label="Centroamérica">
+                            <option value="Belice">Belice</option>
+                            <option value="El Salvador">El Salvador</option>
+                            <option value="Honduras">Honduras</option>
+                            <option value="Nicaragua">Nicaragua</option>
+                            <option value="Costa Rica">Costa Rica</option>
+                            <option value="Panamá">Panamá</option>
+                        </optgroup>
+                    </select>
+                    <button type="submit" class="button-submit">Registrar y Acceder</button>
+                </form>
+            </div>
+            <button class="button-submit button-back" onclick="showSection('login-section')">Volver</button>
+        </section>
+
+        <section id="user-menu-section" class="hidden">
+            <nav class="nav-menu">
+                <button onclick="showTool('quiz-tool')">Diagnóstico de Riesgo</button>
+                <button onclick="showTool('phishing-tool')">Simulador de Phishing</button>
+                <button onclick="showTool('password-tool')">Evaluación de Contraseñas</button>
+                <button onclick="showTool('glossary-tool')">Glosario</button>
+            </nav>
+            <div id="tool-content">
+                <div id="quiz-tool" class="tool-box">
+                    <h2>Diagnóstico de Riesgo</h2>
+                    <p>Responde estas preguntas para evaluar tus hábitos de seguridad digital.</p>
+                    <form id="quiz-form"></form>
+                    <button id="quiz-submit" class="button-submit">Ver Diagnóstico</button>
+                </div>
+
+                <div id="phishing-tool" class="tool-box hidden">
+                    <h2>Simulador de Phishing</h2>
+                    <p>¡Atención! A continuación, se muestran tres correos electrónicos. **Tu tarea es identificar el único correo seguro.** Los otros dos son intentos de phishing. Selecciona la opción que consideres correcta.</p>
+                    <div id="phishing-emails-container"></div>
+                </div>
+                
+                <div id="password-tool" class="tool-box hidden">
+                    <h2>Evaluación de Contraseñas</h2>
+                    <p>Ingresa una contraseña para ver su nivel de complejidad y seguridad.</p>
+                    <input type="password" id="password-input" placeholder="Escribe aquí tu contraseña" oninput="evaluatePassword()">
+                    <p id="password-strength">Tu contraseña es: **Débil**</p>
+                    <p>Esta herramienta evalúa la longitud, el uso de mayúsculas, minúsculas, números y caracteres especiales para darte un estimado de su fuerza.</p>
+                </div>
+                
+                <div id="glossary-tool" class="tool-box hidden">
+                    <h2>Glosario de Ciberseguridad</h2>
+                    <p>Aquí encontrarás definiciones sencillas para los términos más comunes en ciberseguridad.</p>
+                    <div id="glossary-container"></div>
+                </div>
+            </div>
+            <button class="button-submit button-logout" onclick="showSection('login-section')">Cerrar Sesión</button>
+        </section>
+
+        <section id="result-section" class="hidden">
+            <h2 id="result-title"></h2>
+            <div id="quiz-result-text"></div>
+            <div id="phishing-result-text"></div>
+            <button class="button-submit button-back" onclick="showSection('user-menu-section')">Volver al Menú</button>
+            <button class="button-submit button-logout" onclick="showSection('login-section')">Cerrar Sesión</button>
+        </section>
+
+        <section id="admin-dashboard" class="hidden">
+            <h2>Panel de Administrador</h2>
+            <div class="admin-dashboard">
+                <div class="metric-card">
+                    <h3>Usuarios Registrados</h3>
+                    <p class="value" id="users-registered">0</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Ataques de Phishing Bloqueados</h3>
+                    <p class="value" id="phishing-blocked">1,540</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Puntaje de Riesgo Promedio</h3>
+                    <p class="value" id="avg-risk-score">82%</p>
+                </div>
+                <div class="chart-container" style="grid-column: 1 / span 2;">
+                    <h3>Tendencias de Riesgo</h3>
+                    <div class="chart-placeholder">
+                        <img src="tendencias_de_riesgo.png" alt="Gráfico de barras de tendencias de riesgo">
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Distribución Geográfica</h3>
+                    <div class="chart-placeholder">
+                        <img src="distribucion_geografica.png" alt="Mapa de distribución de usuarios">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <h3>Información de Usuarios</h3>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Correo</th>
+                            <th>País</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="button-logout" onclick="showSection('login-section')">Cerrar Sesión</button>
+        </section>
+    </div>
+
+    <script>
+        let userName = '';
+        const users = [
+            { name: 'Sofía García', age: 25, email: 'sofia.garcia@gmail.com', country: 'Guatemala' },
+            { name: 'Juan Pérez', age: 32, email: 'juan.perez@hotmail.com', country: 'El Salvador' },
+            { name: 'Ana Torres', age: 45, email: 'ana.torres@yahoo.com', country: 'Honduras' },
+            { name: 'Luis Ramos', age: 28, email: 'luis.ramos@outlook.com', country: 'Guatemala' },
+            { name: 'Mariana Cruz', age: 22, email: 'mariana.cruz@gmail.com', country: 'Costa Rica' },
+            { name: 'Carlos Díaz', age: 35, email: 'carlos.diaz@gmail.com', country: 'Guatemala' },
+            { name: 'Laura Mendoza', age: 29, email: 'laura.mendoza@outlook.com', country: 'Nicaragua' },
+            { name: 'Pedro Solís', age: 41, email: 'pedro.solis@hotmail.com', country: 'El Salvador' },
+            { name: 'Gabriela Soto', age: 24, email: 'gabriela.soto@yahoo.com', country: 'Panamá' },
+            { name: 'Jorge Castro', age: 38, email: 'jorge.castro@gmail.com', country: 'Belice' }
+        ];
+
+        const quizQuestions = [
+            {
+                q: '¿Utilizas la misma contraseña para múltiples cuentas importantes?',
+                options: [
+                    {text: 'No, uso contraseñas únicas.', value: 0},
+                    {text: 'A veces, para algunas cuentas.', value: 5},
+                    {text: 'Sí, casi siempre la misma.', value: 10}
+                ]
+            },
+            {
+                q: '¿Haces copias de seguridad de tus archivos importantes?',
+                options: [
+                    {text: 'Sí, regularmente.', value: 0},
+                    {text: 'A veces.', value: 5},
+                    {text: 'No, nunca.', value: 10}
+                ]
+            },
+            {
+                q: '¿Revisas los enlaces de correos o mensajes antes de hacer clic?',
+                options: [
+                    {text: 'Sí, siempre verifico.', value: 0},
+                    {text: 'A veces, si es sospechoso.', value: 5},
+                    {text: 'No, hago clic sin pensar.', value: 10}
+                ]
+            },
+            {
+                q: '¿Tienes un antivirus o antimalware activo en tus dispositivos?',
+                options: [
+                    {text: 'Sí, y está actualizado.', value: 0},
+                    {text: 'A veces, pero no lo actualizo.', value: 5},
+                    {text: 'No, no uso ninguno.', value: 10}
+                ]
+            },
+            {
+                q: '¿Tienes activada la autenticación de dos factores (2FA) en tus cuentas principales?',
+                options: [
+                    {text: 'Sí, en la mayoría.', value: 0},
+                    {text: 'En algunas cuentas importantes.', value: 5},
+                    {text: 'No, en ninguna.', value: 10}
+                ]
+            },
+            {
+                q: '¿Eres consciente de los peligros de las redes Wi-Fi públicas no seguras?',
+                options: [
+                    {text: 'Sí, y no realizo transacciones bancarias en ellas.', value: 0},
+                    {text: 'Lo he escuchado, pero no me preocupo mucho.', value: 5},
+                    {text: 'No, nunca lo había pensado.', value: 10}
+                ]
+            },
+            {
+                q: '¿Verificas regularmente los permisos que otorgan las aplicaciones que instalas?',
+                options: [
+                    {text: 'Sí, solo les doy los permisos esenciales.', value: 0},
+                    {text: 'A veces.', value: 5},
+                    {text: 'No, nunca reviso los permisos.', value: 10}
+                ]
+            },
+            {
+                q: '¿Actualizas regularmente el software de tus dispositivos (sistema operativo, aplicaciones)?',
+                options: [
+                    {text: 'Sí, tan pronto como hay una actualización disponible.', value: 0},
+                    {text: 'De vez en cuando.', value: 5},
+                    {text: 'No, prefiero no actualizar.', value: 10}
+                ]
+            },
+            {
+                q: '¿Compartes información personal (como tu fecha de nacimiento o lugar de trabajo) en redes sociales con perfiles públicos?',
+                options: [
+                    {text: 'No, mantengo mi perfil privado.', value: 0},
+                    {text: 'Solo con amigos cercanos.', value: 5},
+                    {text: 'Sí, comparto mucha información personal.', value: 10}
+                ]
+            },
+            {
+                q: 'Si recibes una llamada de un banco solicitando tu número de cuenta o PIN, ¿qué haces?',
+                options: [
+                    {text: 'Cuelgo y llamo al número oficial del banco para verificar.', value: 0},
+                    {text: 'Les doy la información que me piden si la llamada parece legítima.', value: 10},
+                    {text: 'Les digo que no estoy interesado.', value: 5}
+                ]
+            }
+        ];
+
+        // Lista de correos con más ejemplos, incluyendo legítimos
+        const phishingEmails = [
+            {
+                sender: 'Netflix Support &lt;soporte@netflx-pago.com&gt;',
+                subject: 'Facturación: Tu pago ha fallado. ¡Acción requerida!',
+                body: '<p>Hola usuario,</p><p>Lamentamos informarte que tu pago reciente no ha podido ser procesado. Para evitar la suspensión de tu servicio y seguir disfrutando de tus series y películas, por favor actualiza tu información de pago a través de este enlace:</p><p><a href="#" class="email-link">**Actualizar mi información de pago**</a></p><p>Gracias por tu comprensión.</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Notificaciones CiberSeg &lt;info@ciberseg.com&gt;',
+                subject: 'Tu reporte semanal de seguridad digital',
+                body: '<p>Hola,</p><p>Esperamos que te encuentres bien. Tu reporte semanal de buenas prácticas de seguridad ya está disponible. Accede a tu panel para ver tus estadísticas y recomendaciones personalizadas.</p><p><a href="#" class="email-link">Acceder a mi panel de CiberSeg</a></p><p>Te recordamos que no necesitas responder a este correo.</p>',
+                isSafe: true
+            },
+            {
+                sender: 'Banco Seguridad &lt;alerta@seguridad-banco.net&gt;',
+                subject: 'Alerta de Seguridad: Su cuenta ha sido suspendida',
+                body: '<p>Estimado cliente,</p><p>Hemos detectado una actividad sospechosa en su cuenta. Para evitar un fraude y reactivarla, necesitamos que verifique su identidad de inmediato. Haga clic en el siguiente enlace y complete el formulario con sus datos personales y credenciales.</p><p><a href="#" class="email-link">**Verificar mi identidad y reactivar mi cuenta**</a></p><p>Por su seguridad, si no lo hace en 24 horas, su cuenta será cerrada permanentemente.</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Soporte Microsoft &lt;support@m1crosoft-security.info&gt;',
+                subject: 'Advertencia Crítica: Su cuenta de Microsoft ha sido comprometida',
+                body: '<p>Estimado/a usuario/a,</p><p>Se ha intentado acceder a su cuenta desde una ubicación no reconocida. Para evitar el bloqueo permanente de su cuenta, le pedimos que inicie sesión y actualice su información de seguridad de inmediato. El no hacerlo resultará en la pérdida total de acceso a sus datos.</p><p><a href="#" class="email-link">**Actualizar Ahora**</a></p><p>Gracias por su pronta atención.</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Google Support &lt;no-reply@google.com&gt;',
+                subject: 'Revisa tu actividad de inicio de sesión reciente',
+                body: '<p>Hola,</p><p>Se ha iniciado sesión en tu cuenta de Google en un nuevo dispositivo. Si has sido tú, no necesitas hacer nada. Si no has sido tú, revisa tu actividad de seguridad para proteger tu cuenta.</p><p><a href="#" class="email-link">Revisar actividad</a></p><p>Gracias,<br>El equipo de Cuentas de Google</p>',
+                isSafe: true
+            },
+            {
+                sender: 'PayPal Service &lt;serviciocliente@paypal.com-seguro.com&gt;',
+                subject: '¡Alerta de Reembolso! Ha recibido un pago de $500',
+                body: '<p>Felicitaciones,</p><p>Ha recibido un pago de $500.00 USD. Para aceptar su reembolso, haga clic en el enlace a continuación y verifique su información bancaria. Le pedimos que actúe de inmediato, ya que este reembolso expirará en 24 horas.</p><p><a href="#" class="email-link">**Reclamar mi Reembolso**</a></p><p>El equipo de PayPal.</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Amazon Alerts &lt;alerta@amazon-online.net&gt;',
+                subject: 'Confirmación de Pedido: MacBook Pro',
+                body: '<p>Hola [Tu nombre],</p><p>Queremos confirmar tu pedido reciente de un MacBook Pro por valor de Q15,000. Si no has realizado esta compra, por favor haz clic en el siguiente enlace para cancelar la transacción y confirmar tu cuenta:</p><p><a href="#" class="email-link">**Cancelar y proteger mi cuenta**</a></p><p>Gracias por tu atención.</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Spotify &lt;no-reply@spotify.com&gt;',
+                subject: 'Información sobre tu cuenta de Spotify',
+                body: '<p>Hola,</p><p>Este es un recordatorio de que tu suscripción premium se renovará el 1 de octubre. Si deseas actualizar tu método de pago o cancelar tu suscripción, visita tu página de configuración de cuenta.</p><p>Saludos cordiales,<br>El equipo de Spotify</p>',
+                isSafe: true
+            },
+            {
+                sender: 'Apple Support &lt;noreply@icloud.com-id.com&gt;',
+                subject: 'Tu ID de Apple ha sido bloqueado por seguridad',
+                body: '<p>Tu ID de Apple ha sido temporalmente bloqueado por motivos de seguridad debido a múltiples intentos de inicio de sesión fallidos.</p><p>Para desbloquear tu cuenta y verificar tu identidad, por favor haz clic en el siguiente enlace y proporciona tu información personal:</p><p><a href="#" class="email-link">**Desbloquear ahora**</a></p><p>Saludos,<br>Soporte de Apple</p>',
+                isSafe: false
+            },
+            {
+                sender: 'Soporte del Banco &lt;notificaciones@bancocentral.com&gt;',
+                subject: 'Verificación de Seguridad',
+                body: '<p>Estimado Cliente,</p><p>Como parte de nuestras medidas de seguridad, estamos actualizando la información de nuestros usuarios. Por favor, inicie sesión en nuestro sitio web oficial o visite su sucursal más cercana para verificar su cuenta. Nunca le pediremos su información personal por correo electrónico.</p><p>Gracias por su colaboración.</p>',
+                isSafe: true
+            },
+            {
+                sender: 'Promociones de Premios &lt;premios@gana-ya.xyz&gt;',
+                subject: '¡Felicidades! Has ganado un iPhone 15.',
+                body: '<p>¡Increíble! Has sido seleccionado como ganador de nuestro sorteo anual. Para reclamar tu premio, por favor haz clic en el enlace a continuación y completa tus datos de envío y pago para cubrir los "gastos de manejo".</p><p><a href="#" class="email-link">**Reclamar mi premio**</a></p>',
+                isSafe: false
+            }
+        ];
+
+        const glossaryTerms = [
+            {
+                term: 'Phishing',
+                definition: 'Es cuando un estafador se hace pasar por una persona o empresa de confianza (como tu banco) para robar tu información personal, como contraseñas o datos de tarjetas de crédito. Usualmente llega por correo, mensaje o llamada.'
+            },
+            {
+                term: 'Malware',
+                definition: 'Es cualquier software malicioso que se instala en tu dispositivo sin tu permiso. Su objetivo es dañarlo o robar tu información. Algunos ejemplos son los virus, troyanos y spyware.'
+            },
+            {
+                term: 'Contraseña segura',
+                definition: 'Es una combinación de al menos 8 a 12 caracteres, que incluye letras (mayúsculas y minúsculas), números y símbolos. Es única para cada cuenta y difícil de adivinar o descifrar.'
+            },
+            {
+                term: 'Autenticación de dos factores (2FA)',
+                definition: 'Es una capa extra de seguridad. Después de ingresar tu contraseña, se te pide un segundo dato para confirmar que eres tú, como un código que llega a tu teléfono o un dato biométrico (huella digital o rostro).'
+            },
+            {
+                term: 'Antivirus',
+                definition: 'Es un programa que detecta, previene y elimina el malware (programas maliciosos) de tu computadora, teléfono o tablet.'
+            },
+            {
+                term: 'Ransomware',
+                definition: 'Es un tipo de ataque cibernético donde los criminales "secuestran" tus archivos o tu computadora, encriptándolos (haciéndolos ilegibles). Luego te piden un rescate (dinero) a cambio de devolverte el acceso.'
+            },
+            {
+                term: 'Ciberseguridad',
+                definition: 'Es la práctica de proteger los sistemas, las redes y los programas de los ataques digitales. Su objetivo es evitar que se robe información, se dañen los equipos o se interrumpan servicios importantes.'
+            },
+            {
+                term: 'Firewall',
+                definition: 'Funciona como un muro de protección entre tu red y el internet, bloqueando el tráfico que parece peligroso para prevenir que entren ataques a tu computadora.'
+            },
+            {
+                term: 'Ingeniería social',
+                definition: 'Es el arte de manipular a las personas para que revelen información confidencial o hagan algo que no deberían. El phishing es un ejemplo muy común de este tipo de engaño.'
+            },
+            {
+                term: 'Virus',
+                definition: 'Es un tipo de malware que se adjunta a un programa o archivo, y cuando lo abres, se copia y se esparce por todo tu sistema, dañando otros archivos.'
+            },
+            {
+                term: 'Troyano',
+                definition: 'Es un malware que se disfraza de un programa útil o inofensivo, pero por detrás, le da a un atacante acceso a tu dispositivo para robar tu información.'
+            },
+            {
+                term: 'Denegación de Servicio (DoS)',
+                definition: 'Es un ataque que busca sobrecargar un servidor o sitio web con tanto tráfico falso que el servicio se cae y no puede atender a los usuarios reales.'
+            },
+            {
+                term: 'VPN (Red Privada Virtual)',
+                definition: 'Es una herramienta que te permite navegar por internet de forma segura y anónima. Oculta tu dirección IP y encripta tu conexión, protegiéndote de los riesgos en redes Wi-Fi públicas.'
+            },
+            {
+                term: 'Zero-Day',
+                definition: 'Se refiere a una vulnerabilidad o falla en un programa que aún no es conocida por los desarrolladores. Esto la hace muy peligrosa porque no hay un parche o solución disponible para protegerse.'
+            },
+            {
+                term: 'Ataque de fuerza bruta',
+                definition: 'Es un método en el que un programa intenta adivinar una contraseña probando millones de combinaciones de caracteres por segundo, hasta que encuentra la correcta.'
+            },
+            {
+                term: 'Malvertising',
+                definition: 'Es la práctica de usar anuncios en línea para distribuir malware. Si haces clic en un anuncio malicioso, puedes descargar un programa dañino sin darte cuenta.'
+            }
+        ];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderUserTable() {
+            const tableBody = document.getElementById('user-table-body');
+            tableBody.innerHTML = '';
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${user.country}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            document.getElementById('users-registered').textContent = `${users.length} usuarios`;
+        }
+
+        function loadQuiz() {
+            const quizForm = document.getElementById('quiz-form');
+            quizForm.innerHTML = '';
+            const selectedQuestions = shuffle(quizQuestions).slice(0, 8);
+            selectedQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-box';
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.q}</p>`;
+                q.options.forEach(opt => {
+                    questionDiv.innerHTML += `<label><input type="radio" name="q${index}" value="${opt.value}"> ${opt.text}</label>`;
+                });
+                quizForm.appendChild(questionDiv);
+            });
+        }
+
+        function loadPhishingTest() {
+            const container = document.getElementById('phishing-emails-container');
+            container.innerHTML = '';
+            // Aseguramos que siempre haya un correo seguro para elegir
+            const allEmails = [...phishingEmails];
+            const safeEmails = allEmails.filter(email => email.isSafe);
+            const unsafeEmails = allEmails.filter(email => !email.isSafe);
+
+            const selectedSafe = shuffle(safeEmails).slice(0, 1);
+            const selectedUnsafe = shuffle(unsafeEmails).slice(0, 2);
+            
+            const selectedEmails = shuffle([...selectedSafe, ...selectedUnsafe]);
+
+            selectedEmails.forEach(email => {
+                const emailDiv = document.createElement('div');
+                emailDiv.className = 'email-container';
+                emailDiv.setAttribute('onclick', `showPhishingResult(${email.isSafe})`);
+                emailDiv.innerHTML = `
+                    <div class="email-header">
+                        <span>De: <strong>${email.sender}</strong></span>
+                        <span>Hoy, ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p class="email-subject">${email.subject}</p>
+                    <hr>
+                    <div class="email-body">${email.body}</div>
+                `;
+                container.appendChild(emailDiv);
+            });
+        }
+        
+        function loadGlossary() {
+            const glossaryContainer = document.getElementById('glossary-container');
+            glossaryContainer.innerHTML = '';
+            glossaryTerms.forEach(term => {
+                const termDiv = document.createElement('div');
+                termDiv.className = 'glossary-item';
+                termDiv.innerHTML = `
+                    <div class="glossary-term-header">
+                        <h3>${term.term}</h3>
+                        <span class="arrow">►</span>
+                    </div>
+                    <div class="glossary-definition">
+                        <p>${term.definition}</p>
+                    </div>
+                `;
+                termDiv.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+                glossaryContainer.appendChild(termDiv);
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            if (sectionId === 'user-menu-section') {
+                showTool('quiz-tool');
+            }
+            if (sectionId === 'admin-dashboard') {
+                renderUserTable();
+            }
+        }
+        function showTool(toolId) {
+            document.getElementById('tool-content').querySelectorAll('.tool-box').forEach(tool => tool.classList.add('hidden'));
+            document.getElementById(toolId).classList.remove('hidden');
+            if (toolId === 'quiz-tool') {
+                loadQuiz();
+            } else if (toolId === 'phishing-tool') {
+                loadPhishingTest();
+            } else if (toolId === 'glossary-tool') {
+                loadGlossary();
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username === 'admin' && password === 'admin123') {
+                showSection('admin-dashboard');
+                document.getElementById('main-title').textContent = 'Panel de Administrador';
+            } else if (username === 'usuario' && password === 'test1234') {
+                showSection('register-section');
+                document.getElementById('main-title').textContent = 'Registro de Usuario';
+            } else {
+                alert('Usuario o contraseña incorrectos.');
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const regName = document.getElementById('reg-name').value;
+            const regEmail = document.getElementById('reg-email').value;
+            const regCity = document.getElementById('reg-city').value;
+            const regAge = document.getElementById('reg-age').value;
+            const regCountry = document.getElementById('reg-country').value;
+            
+            const isEmailRegistered = users.some(user => user.email === regEmail);
+            if (isEmailRegistered) {
+                alert('El correo electrónico ya está registrado. Por favor, utiliza otro.');
+                return;
+            }
+
+            const newUser = {
+                name: regName,
+                age: parseInt(regAge),
+                email: regEmail,
+                country: regCountry
+            };
+            users.push(newUser);
+            userName = newUser.name;
+
+            alert(`¡Hola, ${userName}! Tu registro ha sido completado. Serás redirigido al menú de herramientas.`);
+            showSection('user-menu-section');
+        });
+
+        document.getElementById('quiz-submit').addEventListener('click', function() {
+            let score = 0;
+            const questions = document.getElementById('quiz-form').querySelectorAll('.question-box');
+            let allAnswered = true;
+
+            questions.forEach(q => {
+                const selected = q.querySelector('input[type="radio"]:checked');
+                if (selected) {
+                    score += parseInt(selected.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Por favor, responde todas las preguntas del diagnóstico.');
+                return;
+            }
+
+            const maxScore = questions.length * 10;
+            const percentage = ((maxScore - score) / maxScore) * 100;
+
+            const resultText = document.getElementById('quiz-result-text');
+            resultText.innerHTML = `
+                <p>Hola, <strong>${userName}</strong>.</p>
+                <p>Tu puntaje en el Diagnóstico de Riesgo es:</p>
+                <p class="quiz-result-percentage ${percentage >= 80 ? 'green-score' : 'red-score'}">${percentage.toFixed(0)}%</p>
+                <p>${percentage >= 80 ? '¡Felicidades! Tienes un excelente nivel de conocimiento en ciberseguridad.' : '¡Hay mucho por mejorar! Te recomendamos explorar nuestras herramientas y servicios.'}</p>
+            `;
+            document.getElementById('phishing-result-text').classList.add('hidden');
+            document.getElementById('result-title').textContent = 'Resultados del Diagnóstico';
+            showSection('result-section');
+        });
+
+        function showPhishingResult(isCorrect) {
+            const resultText = document.getElementById('phishing-result-text');
+            resultText.classList.remove('hidden');
+            document.getElementById('quiz-result-text').classList.add('hidden');
+            document.getElementById('result-title').textContent = 'Resultado del Simulador de Phishing';
+            if (isCorrect) {
+                resultText.innerHTML = `<p class="result-level high-risk">¡Correcto!</p><p>Has identificado el correo seguro. ¡Excelente trabajo!</p>`;
+            } else {
+                resultText.innerHTML = `<p class="result-level low-risk">¡Incorrecto!</p><p>Ese era un intento de phishing. Te recomendamos analizar siempre la dirección de correo y los enlaces antes de hacer clic.</p>`;
+            }
+            showSection('result-section');
+        }
+
+        function evaluatePassword() {
+            const password = document.getElementById('password-input').value;
+            let strength = 'Muy débil';
+            let strengthColor = 'red';
+            
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(password);
+            const isLong = password.length >= 8;
+
+            let score = 0;
+            if (isLong) score++;
+            if (hasLowercase) score++;
+            if (hasUppercase) score++;
+            if (hasNumber) score++;
+            if (hasSpecial) score++;
+
+            if (score >= 5) {
+                strength = 'Muy Fuerte';
+                strengthColor = '#28a745';
+            } else if (score >= 3) {
+                strength = 'Fuerte';
+                strengthColor = '#ffc107';
+            } else if (score >= 1) {
+                strength = 'Débil';
+                strengthColor = '#dc3545';
+            }
+
+            const passwordStrengthElement = document.getElementById('password-strength');
+            passwordStrengthElement.textContent = `Tu contraseña es: **${strength}**`;
+            passwordStrengthElement.style.color = strengthColor;
+        }
+
+        showSection('login-section');
+    </script>
+</body>
+</html>
