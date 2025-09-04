@@ -1195,7 +1195,7 @@
             }
 
             const content = `
-                <p>Hola, <strong>${userName}</strong>.</p>
+                <p>Hola <strong>${userName}</strong></p>
                 <p>Tu puntaje en el Diagnóstico de Riesgo es:</p>
                 <p class="quiz-result-percentage ${percentage >= 80 ? 'green-score' : 'red-score'}">${percentage.toFixed(0)}%</p>
                 <p>${percentage >= 80 ? '¡Felicidades! Tienes un excelente nivel de conocimiento en ciberseguridad.' : '¡Hay mucho por mejorar! Te recomendamos explorar nuestras herramientas y servicios.'}</p>
@@ -1334,4 +1334,5 @@
 </body>
 
 </html>
+
 
